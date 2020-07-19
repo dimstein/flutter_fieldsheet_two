@@ -29,7 +29,7 @@ class _SignInPageState extends State<SignInPage> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailTEC.text.trim(), password: _passwordTEC.text.trim());
     } catch (e) {
-      print(e); //TODO show dialog with error
+      print("SOMETHING FROM SIGNINEMAIL $e"); //TODO show dialog with error
     }
   }
 
@@ -39,7 +39,7 @@ class _SignInPageState extends State<SignInPage> {
           email: _emailTEC.text.trim(), password: _passwordTEC.text.trim());
       _signInEmail();
     } catch (e) {
-      print(e); //TODO show dialog with error
+      print('register problem $e XXXXXXXXXXXXXX'); //TODO show dialog with error
     }
   }
 

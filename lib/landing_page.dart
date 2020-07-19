@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_fieldsheet/home_page.dart';
+//import 'package:flutter_fieldsheet/LayoutScreen/layout_basic.dart';
 import 'package:flutter_fieldsheet/sign_in_page.dart';
+import 'package:flutter_fieldsheet/text_basic.dart';
 
 class LandingPage extends StatelessWidget {
   final String appTitle;
@@ -18,7 +19,8 @@ class LandingPage extends StatelessWidget {
             if (user == null) {
               return SignInPage(appTitle: appTitle);
             }
-            return HomePage(user: user);
+            //return HomePage(user: user);
+            return TextBasic();
           } else {
             return Scaffold(
               body: Center(
