@@ -5,6 +5,7 @@ import 'package:flutter_fieldsheet/LayoutScreen/card_ref.dart';
 import 'package:flutter_fieldsheet/models/odour.dart';
 import 'package:flutter_fieldsheet/services/database.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 class LayoutBasic extends StatefulWidget {
   @override
@@ -251,8 +252,14 @@ class _LayoutBasicState extends State<LayoutBasic> {
                       setState(() {
                         _droppedValue = uid;
                       });
+
+                      Toast.show('Data Saved', context,
+                          duration: Toast.LENGTH_SHORT,
+                          gravity: Toast.TOP,
+                          backgroundColor: Colors.green);
                     } on Exception catch (e) {
                       print('failed to save the data with: $e');
+
                     }
                   });
                 }),

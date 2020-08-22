@@ -22,14 +22,17 @@ class CardBags extends StatelessWidget {
             TextFormField(
               decoration: InputDecoration(labelText: 'Bag 1'),
               controller: bag1TEC,
+              keyboardType: TextInputType.number,
             ),
             TextFormField(
               decoration: InputDecoration(labelText: 'Bag 2'),
               controller: bag2TEC,
+              keyboardType: TextInputType.number,
             ),
             TextFormField(
               decoration: InputDecoration(labelText: 'Bag 3'),
               controller: bag3TEC,
+              keyboardType: TextInputType.number,
             ),
           ],
         ),
