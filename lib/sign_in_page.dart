@@ -118,13 +118,13 @@ class _SignInPageState extends State<SignInPage> {
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(32.0),
+            padding: const EdgeInsets.fromLTRB(32.0, 5, 32, 32),
             child: Column(
               children: [
                 Image.asset(
                   'assets/images/login.jpeg',
-                  height: 100,
-                  width: 100,
+                  height: 50,
+                  width: 50,
                 ),
                 SizedBox(height: 10),
                 emailTFF,

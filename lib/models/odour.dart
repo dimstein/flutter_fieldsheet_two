@@ -13,8 +13,18 @@ class Odour {
   final String uid;
   final List zearch;
 
-  Odour(this.reference, this.client, this.site, this.bag1, this.bag2, this.bag3,
-      this.spare1, this.spare2, this.spare3, this.uid, this.zearch);
+  Odour(
+      {this.reference,
+      this.client,
+      this.site,
+      this.bag1,
+      this.bag2,
+      this.bag3,
+      this.spare1,
+      this.spare2,
+      this.spare3,
+      this.uid,
+      this.zearch});
 
   factory Odour.fromMap(Map<String, dynamic> data) {
     if (data == null) {
@@ -31,8 +41,18 @@ class Odour {
     final String spare3 = data['spare3'];
     final String uid = data['uid'];
     final List zearch = data['zearch'];
-    return Odour(reference, client, site, bag1, bag2, bag3, spare1, spare2,
-        spare3, uid, zearch);
+    return Odour(
+        reference: reference,
+        client: client,
+        site: site,
+        bag1: bag1,
+        bag2: bag2,
+        bag3: bag3,
+        spare1: spare1,
+        spare2: spare2,
+        spare3: spare3,
+        uid: uid,
+        zearch: zearch);
   }
 
   Map<String, dynamic> toMap() {

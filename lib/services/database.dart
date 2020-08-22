@@ -1,14 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_fieldsheet/models/odour.dart';
+import 'package:flutter_fieldsheet/services/api_path.dart';
 import 'package:flutter_fieldsheet/services/firestore_service.dart';
 
 abstract class Database {
   Stream<List<Odour>> odoursStream();
 
-  Stream<Odour> odourStream({String uid});
+  Stream<List<Odour>> odourStream({@required String odourUID});
 
   Future<void> setOdour(Odour odour);
 
-  Future<String> nextUID();
+  Future<void> logOut();
+
+  Future<String> lastUID();
 }
 
 class FirestoreDatabase implements Database {
@@ -16,22 +20,33 @@ class FirestoreDatabase implements Database {
 
   @override
   Stream<List<Odour>> odoursStream() => _service.collectionStream(
-        path: 'odour',
-        builder: (data) => Odour.fromMap(data),
+    path: APIPath.odour(),
+    builder: (data) => Odour.fromMap(data),
+  );
+
+  @override
+  Stream<List<Odour>> odourStream({@required String odourUID}) =>
+      _service.docStream(
+          path: APIPath.odour(),
+          builder: (data) => Odour.fromMap(data),
+          docUID: odourUID
       );
 
   @override
-  Stream<Odour> odourStream({String uid}) => _service.documentStream(
-        path: 'odour/$uid',
-        builder: (data) => Odour.fromMap(data),
-      );
-
-  @override
-  Future<void> setOdour(Odour odour) async => await _service.setOdour(
+  Future<void> setOdour(Odour odour) async =>
+      await _service.setOdour(
         path: 'odour/${odour.uid}',
         data: odour.toMap(),
       );
 
   @override
-  Future<String> nextUID() async => await _service.nextUID(path: 'odour');
+  Future<void> logOut() async => await _service.logOut();
+
+  @override
+  Future<String> lastUID() async =>
+      await _service.lastUID(
+          path: APIPath.odour()
+      );
+
+
 }
