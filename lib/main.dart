@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fieldsheet/landing_page.dart';
+import 'package:load_toast/load_toast.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(LoadToast(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_fieldsheet/LayoutScreen/card_bags.dart';
 import 'package:flutter_fieldsheet/LayoutScreen/card_extras.dart';
 import 'package:flutter_fieldsheet/LayoutScreen/card_ref.dart';
 import 'package:flutter_fieldsheet/models/odour.dart';
 import 'package:flutter_fieldsheet/services/database.dart';
+import 'package:load_toast/load_toast.dart';
 import 'package:provider/provider.dart';
-import 'package:toast/toast.dart';
 
 class LayoutBasic extends StatefulWidget {
   @override
@@ -107,7 +109,7 @@ class _LayoutBasicState extends State<LayoutBasic> {
                   children: <Widget>[
                     Container(
                       decoration: BoxDecoration(
-                          shape: BoxShape.rectangle, color: Colors.purple[300]),
+                          shape: BoxShape.rectangle, color: Colors.grey[400]),
                       width: screenSize.width * 0.80,
                       child: Center(
                         child: StreamBuilder<List<Odour>>(
@@ -125,13 +127,12 @@ class _LayoutBasicState extends State<LayoutBasic> {
                                 var odour = snapshot.data;
 
                                 return DropdownButton<String>(
-                                  //value: _droppedValue==null ? 'Select or Enter New      ': _droppedValue,
                                   onChanged: (value) {
                                     setState(() {
                                       _droppedValue = value;
 
                                       var selected = odour.firstWhere(
-                                          (element) =>
+                                              (element) =>
                                               element.uid.startsWith(value));
                                       refTEC.text = selected.reference;
                                       clientTEC.text = selected.client;
@@ -149,26 +150,26 @@ class _LayoutBasicState extends State<LayoutBasic> {
                                   style: TextStyle(color: Colors.indigo),
                                   hint: _droppedValue == 'null'
                                       ? Text(
-                                          'Select or Enter New          ',
-                                          style: TextStyle(fontSize: 28),
-                                        )
+                                    'Select or Enter New          ',
+                                    style: TextStyle(fontSize: 28),
+                                  )
                                       : Text(
-                                          '$_droppedValue          ',
-                                          style: TextStyle(fontSize: 28),
-                                        ),
+                                    '$_droppedValue          ',
+                                    style: TextStyle(fontSize: 28),
+                                  ),
                                   elevation: 15,
                                   items: odour.isEmpty
                                       ? 'null'
                                       : odour
-                                          .toList()
-                                          .map((item) => item.uid)
-                                          .map<DropdownMenuItem<String>>(
-                                              (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
+                                      .toList()
+                                      .map((item) => item.uid)
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
                                 );
                               }
 
@@ -218,7 +219,7 @@ class _LayoutBasicState extends State<LayoutBasic> {
                   db.lastUID().then((value) {
                     nextUID = ((int.parse(value)) + 1).toString();
                     String uid =
-                        _droppedValue == 'null' ? nextUID : _droppedValue;
+                    _droppedValue == 'null' ? nextUID : _droppedValue;
 
                     List<String> _zearch = [
                       refTEC.text,
@@ -235,32 +236,43 @@ class _LayoutBasicState extends State<LayoutBasic> {
 
                     print('this is uid: $uid or droppedValue $_droppedValue');
 
-                    try {
-                      db.setOdour(Odour(
-                          reference: refTEC.text,
-                          client: clientTEC.text,
-                          site: siteTEC.text,
-                          bag1: bag1TEC.text,
-                          bag2: bag2TEC.text,
-                          bag3: bag3TEC.text,
-                          spare1: extra1TEC.text,
-                          spare2: extra2TEC.text,
-                          spare3: extra3TEC.text,
-                          zearch: _zearch,
-                          uid: uid));
 
-                      setState(() {
-                        _droppedValue = uid;
-                      });
+                    db.setOdour(Odour(
+                        reference: refTEC.text,
+                        client: clientTEC.text,
+                        site: siteTEC.text,
+                        bag1: bag1TEC.text,
+                        bag2: bag2TEC.text,
+                        bag3: bag3TEC.text,
+                        spare1: extra1TEC.text,
+                        spare2: extra2TEC.text,
+                        spare3: extra3TEC.text,
+                        zearch: _zearch,
+                        uid: uid))
 
-                      Toast.show('Data Saved', context,
-                          duration: Toast.LENGTH_SHORT,
-                          gravity: Toast.TOP,
-                          backgroundColor: Colors.green);
-                    } on Exception catch (e) {
-                      print('failed to save the data with: $e');
+                        .then((value) =>
+                        showLoadToast(
+                            indicatorColor: Colors.green[900],
+                            backgroundColor: Colors.green,
+                            text: "Saved")
 
-                    }
+                            .then((value) => Timer(Duration(seconds: 2), () =>
+                            hideLoadToastWithSuccess()))
+
+                            .catchError(() =>
+                            showLoadToast(
+                                indicatorColor: Colors.red[900],
+                                backgroundColor: Colors.red,
+                                text: "Error")
+                        )
+                    );
+
+
+                    // Timer(Duration(seconds: 2), ()=> hideLoadToastWithSuccess());
+
+                    setState(() {
+                      _droppedValue = uid;
+                    });
                   });
                 }),
             SizedOverflowBox(
