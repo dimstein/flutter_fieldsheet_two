@@ -1,34 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fieldsheet/models/destination.dart';
 import 'package:flutter_fieldsheet/models/odour.dart';
 import 'package:flutter_fieldsheet/services/database.dart';
 import 'package:provider/provider.dart';
 
 class ListBasic extends StatelessWidget {
+  final Destination destination;
+
+  const ListBasic({Key key, this.destination}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    var db = Provider.of<Database>(context);
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.lime),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('List Basic'),
-          leading: Icon(Icons.view_list),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.lock_open),
-                onPressed: () {
-                  print('LOCK OUT PRESSED');
-                  db.logOut();
-                }),
+      //theme: ThemeData(primarySwatch: Colors.lime),
+      home: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            // DropdownUidWidget(),
+            OdourListWidget(),
           ],
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              DropdownUidWidget(),
-              OdourListWidget(),
-            ],
-          ),
         ),
       ),
     );
@@ -47,58 +37,75 @@ class _OdourListWidgetState extends State<OdourListWidget> {
   Widget build(BuildContext context) {
     var db = Provider.of<Database>(context);
 
-    return StreamBuilder<List<Odour>>(
-        stream: searchUID == 'null'
-            ? db.odoursStream()
-            : db.odourStream(odourUID: searchUID),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var odour = snapshot.data;
+    return Material(
+      child: StreamBuilder<List<Odour>>(
+          stream: searchUID == 'null'
+              ? db.odoursStream()
+              : db.odourStream(odourUID: searchUID),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              var odour = snapshot.data;
+              return Center(
+                child: Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height,
+                  color: Colors.blueGrey[300],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                        itemCount: odour.length,
+                        itemBuilder: (context, count) =>
+                            Column(
+                              children: <Widget>[
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.blueGrey,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  child: ListTile(
+                                    title: Text('${odour[count].reference}'),
+                                    leading: Text('${odour[count].uid}'),
+                                    //, style: TextStyle(fontSize: 12, color: Colors.black),),
+                                    subtitle: Text('${odour[count].site}'),
+                                    trailing: Text('${odour[count].bag3}'),
+                                    // style: TextStyle(fontSize: 13, color: Colors.black),),
+                                    onTap: () {
+                                      print('WHAT JUST HAPPENED');
+                                      setState(() {
+                                        searchUID = '1003';
+                                      });
+                                    },
+                                  ),
+                                ),
+                                SizedBox(height: 2)
+                              ],
+                            )),
+                  ),
+                ),
+              );
+            }
             return Center(
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.98,
-                height: MediaQuery.of(context).size.height * 0.77,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height,
                 color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                      itemCount: odour.length,
-                      itemBuilder: (context, count) => Column(
-                            children: <Widget>[
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.blueGrey,
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0))),
-                                child: ListTile(
-                                  title: Text('${odour[count].reference}'),
-                                  leading: Text('${odour[count].uid}'),
-                                  subtitle: Text('${odour[count].site}'),
-                                  trailing: Text('${odour[count].bag3}'),
-                                  onTap: () {
-                                    print('WHAT JUST HAPPENED');
-                                    setState(() {
-                                      searchUID = '1003';
-                                    });
-                                  },
-                                ),
-                              ),
-                              SizedBox(height: 2)
-                            ],
-                          )),
-                ),
+                child: CircularProgressIndicator(),
               ),
             );
-          }
-          return Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              color: Colors.white,
-              child: CircularProgressIndicator(),
-            ),
-          );
-        });
+          }),
+    );
   }
 }
 
