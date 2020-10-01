@@ -12,10 +12,8 @@ import 'package:provider/provider.dart';
 class LayoutBasic extends StatefulWidget {
 
   final Destination destination;
-  final VoidCallback layoutOdour;
 
-  const LayoutBasic({Key key, this.destination, this.layoutOdour})
-      : super(key: key);
+  const LayoutBasic({Key key, this.destination}) : super(key: key);
 
   @override
   _LayoutBasicState createState() => _LayoutBasicState();
@@ -27,26 +25,14 @@ class _LayoutBasicState extends State<LayoutBasic> {
   String _droppedValue = 'null';
 
   TextEditingController refTEC = TextEditingController();
-
   TextEditingController clientTEC = TextEditingController();
-
   TextEditingController siteTEC = TextEditingController();
-
   TextEditingController bag1TEC = TextEditingController();
-
   TextEditingController bag2TEC = TextEditingController();
-
   TextEditingController bag3TEC = TextEditingController();
-
   TextEditingController extra1TEC = TextEditingController();
-
   TextEditingController extra2TEC = TextEditingController();
-
   TextEditingController extra3TEC = TextEditingController();
-
-  void submitValue() {
-    print('This is what is in the refTEC: ${refTEC.text}');
-  }
 
   @override
   void dispose() {
@@ -62,10 +48,19 @@ class _LayoutBasicState extends State<LayoutBasic> {
     super.dispose();
   }
 
-  void printTEC() {
-    //setState(() {
-      print('RELEASE OF THE ${refTEC.text}');
-    // });
+  void clearTEC() {
+    setState(() {
+      refTEC.clear();
+      clientTEC.clear();
+      siteTEC.clear();
+      bag1TEC.clear();
+      bag2TEC.clear();
+      bag3TEC.clear();
+      extra1TEC.clear();
+      extra2TEC.clear();
+      extra3TEC.clear();
+      _droppedValue = 'null';
+    });
   }
 
   @override
@@ -119,23 +114,23 @@ class _LayoutBasicState extends State<LayoutBasic> {
 
                                       return DropdownButton<String>(
                                         onChanged: (value) {
-                                          //  setState(() {
-                                          _droppedValue = value;
+                                          setState(() {
+                                            _droppedValue = value;
 
-                                          var selected = odour.firstWhere(
-                                                  (element) =>
-                                                  element.uid.startsWith(
-                                                      value));
-                                          refTEC.text = selected.reference;
-                                          clientTEC.text = selected.client;
-                                          siteTEC.text = selected.site;
-                                          bag1TEC.text = selected.bag1;
-                                          bag2TEC.text = selected.bag2;
-                                          bag3TEC.text = selected.bag3;
-                                          extra1TEC.text = selected.spare1;
-                                          extra2TEC.text = selected.spare2;
-                                          extra3TEC.text = selected.spare3;
-                                          // });
+                                            var selected = odour.firstWhere(
+                                                    (element) =>
+                                                    element.uid.startsWith(
+                                                        value));
+                                            refTEC.text = selected.reference;
+                                            clientTEC.text = selected.client;
+                                            siteTEC.text = selected.site;
+                                            bag1TEC.text = selected.bag1;
+                                            bag2TEC.text = selected.bag2;
+                                            bag3TEC.text = selected.bag3;
+                                            extra1TEC.text = selected.spare1;
+                                            extra2TEC.text = selected.spare2;
+                                            extra3TEC.text = selected.spare3;
+                                          });
                                         },
                                         icon: Icon(Icons.beach_access),
                                         iconSize: 25,
@@ -265,7 +260,7 @@ class _LayoutBasicState extends State<LayoutBasic> {
                         .then((value) =>
                         Timer(Duration(seconds: 2), () =>
                             hideLoadToastWithSuccess()))
-                        .catchError(() =>
+                        .catchError((Object error) =>
                         showLoadToast(
                             indicatorColor: Colors.red[900],
                             backgroundColor: Colors.red,
@@ -273,18 +268,17 @@ class _LayoutBasicState extends State<LayoutBasic> {
                     )
                 );
 
-
-                // Timer(Duration(seconds: 2), ()=> hideLoadToastWithSuccess());
-
-                //  setState(() {
                 _droppedValue = uid;
-                // });
               });
             }),
         SizedOverflowBox(
           size: Size(10, 0),
         ),
-        FloatingActionButton(child: Icon(Icons.clear), onPressed: null)
+        FloatingActionButton(
+            child: Icon(Icons.clear),
+            onPressed: () {
+              clearTEC();
+            })
         //clearTEC)
       ],
     );
