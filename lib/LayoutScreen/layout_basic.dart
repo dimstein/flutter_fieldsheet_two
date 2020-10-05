@@ -112,52 +112,54 @@ class _LayoutBasicState extends State<LayoutBasic> {
                                     if (snapshot.hasData) {
                                       var odour = snapshot.data;
 
-                                      return DropdownButton<String>(
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _droppedValue = value;
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: DropdownButton<String>(
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _droppedValue = value;
 
-                                            var selected = odour.firstWhere(
-                                                    (element) =>
-                                                    element.uid.startsWith(
-                                                        value));
-                                            refTEC.text = selected.reference;
-                                            clientTEC.text = selected.client;
-                                            siteTEC.text = selected.site;
-                                            bag1TEC.text = selected.bag1;
-                                            bag2TEC.text = selected.bag2;
-                                            bag3TEC.text = selected.bag3;
-                                            extra1TEC.text = selected.spare1;
-                                            extra2TEC.text = selected.spare2;
-                                            extra3TEC.text = selected.spare3;
-                                          });
-                                        },
-                                        icon: Icon(Icons.beach_access),
-                                        iconSize: 25,
-                                        style: TextStyle(color: Colors.indigo),
-                                        hint: _droppedValue == 'null'
-                                            ? Text(
-                                          'Select or Enter New   ',
-                                          style: TextStyle(fontSize: 25),
-                                        )
-                                            : Text(
-                                          '$_droppedValue          ',
-                                          style: TextStyle(fontSize: 25),
-                                        ),
-                                        elevation: 15,
-                                        items: odour.isEmpty
-                                            ? 'null'
-                                            : odour
-                                            .toList()
-                                            .map((item) => item.uid)
-                                            .map<DropdownMenuItem<String>>(
-                                                (String value) {
+                                          var selected = odour.firstWhere(
+                                              (element) => element.uid
+                                                  .startsWith(value));
+                                          refTEC.text = selected.reference;
+                                          clientTEC.text = selected.client;
+                                          siteTEC.text = selected.site;
+                                          bag1TEC.text = selected.bag1;
+                                          bag2TEC.text = selected.bag2;
+                                          bag3TEC.text = selected.bag3;
+                                          extra1TEC.text = selected.spare1;
+                                          extra2TEC.text = selected.spare2;
+                                          extra3TEC.text = selected.spare3;
+                                        });
+                                      },
+                                      icon: Icon(Icons.beach_access),
+                                      iconSize: 25,
+                                      style: TextStyle(color: Colors.indigo),
+                                      hint: _droppedValue == 'null'
+                                          ? Text(
+                                              'Select or Enter New   ',
+                                              style: TextStyle(fontSize: 25),
+                                            )
+                                          : Text(
+                                              '$_droppedValue          ',
+                                              style: TextStyle(fontSize: 25),
+                                            ),
+                                      elevation: 15,
+                                      items: odour.isEmpty
+                                          ? 'null'
+                                          : odour
+                                              .toList()
+                                              .map((item) => item.uid)
+                                              .map<DropdownMenuItem<String>>(
+                                                  (String value) {
                                               return DropdownMenuItem<String>(
                                                 value: value,
                                                 child: Text(value),
                                               );
                                             }).toList(),
-                                      );
+                                    ),
+                                  );
                                     }
 
                                     return Container(
