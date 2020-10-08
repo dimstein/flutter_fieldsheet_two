@@ -55,6 +55,39 @@ class FirestoreService {
     });
   }
 
+  Stream<List<T>> filteredStream<T>({
+    @required String path,
+    @required T builder(Map<String, dynamic> data),
+    @required List<String> searchedUIDs,
+    //@required String docUID,
+    Query queryBuilder(Query query),
+    int sort(T lhs, T rhs),
+  }) {
+    Query query = Firestore.instance.collection(path);
+    if (queryBuilder != null) {
+      query = queryBuilder(query);
+    }
+    List<String> tempUID = ['1001', '1005', '1009'];
+
+    final Stream<QuerySnapshot> snapshots =
+    query.where('uid', arrayContains: tempUID).snapshots();
+
+    //query.where('uid', isEqualTo: docUID).snapshots();
+
+
+    return snapshots.map((snapshot) {
+      final result = snapshot.documents
+          .map((snapshot) => builder(snapshot.data))
+          .where((element) => element != null)
+          .toList();
+      if (sort != null) {
+        result.sort(sort);
+      }
+      return result;
+    });
+  }
+
+
   Future<String> lastUID({@required String path}) {
     return Firestore.instance
         .collection(path)

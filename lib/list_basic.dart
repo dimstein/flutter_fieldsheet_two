@@ -54,12 +54,14 @@ class _OdourListWidgetState extends State<OdourListWidget> {
     var db = Provider.of<Database>(context);
 //activeUID=widget.searchUID;
     print('OdourListWidget searchUID value = $activeUID');
+    List<String> quickUID = ['1000', '1005', '1010'];
 
     return Material(
       child: StreamBuilder<List<Odour>>(
           stream: activeUID == 'null'
               ? db.odoursStream()
-              : db.odourStream(odourUID: activeUID),
+              : db.filterOdourStream(searchUID: quickUID),
+          // : db.odourStream(odourUID: activeUID),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var odour = snapshot.data;
