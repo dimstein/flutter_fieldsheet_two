@@ -72,7 +72,6 @@ class Odour {
   }
 
   @override
-  // TODO: implement hashCode
   int get hashCode => hashValues(reference, client, site, bag1, bag2, bag3,
       spare1, spare2, spare3, uid, zearch);
 

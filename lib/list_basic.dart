@@ -8,13 +8,14 @@ class ListBasic extends StatelessWidget {
   final Destination destination;
   final String searchUID;
 
-  const ListBasic({Key key, this.destination, this.searchUID})
+  const ListBasic({Key key, this.destination, this.searchUID = 'null'})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    //return MaterialApp(
-    //home:
+    String activeLBUID;
+    activeLBUID = searchUID;
+    print('this is ListBasic $activeLBUID');
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 25.0),
@@ -25,7 +26,7 @@ class ListBasic extends StatelessWidget {
             children: <Widget>[
               SearchTextForm(),
               OdourListWidget(
-                searchUID: 'null',
+                searchUID: activeLBUID,
               ),
             ],
           ),
@@ -46,11 +47,13 @@ class OdourListWidget extends StatefulWidget {
 }
 
 class _OdourListWidgetState extends State<OdourListWidget> {
-  String activeUID = 'null';
+  String activeUID;
 
   @override
   Widget build(BuildContext context) {
     var db = Provider.of<Database>(context);
+//activeUID=widget.searchUID;
+    print('OdourListWidget searchUID value = $activeUID');
 
     return Material(
       child: StreamBuilder<List<Odour>>(
@@ -167,8 +170,11 @@ class _SearchTextFormState extends State<SearchTextForm> {
           Expanded(flex: 1,
               child: RaisedButton(
                 onPressed: () {
-                  print('THIS IS THE NUMBER FROM SEARCH: ${searchUIDTEC.text}');
-                },
+                  // Navigator.push(context, MaterialPageRoute(
+                  //    builder: (context) => OdourListWidget(searchUID: '1006'))
+                  // );
+                }
+                ,
                 child: Icon(Icons.search),))
         ],
 
