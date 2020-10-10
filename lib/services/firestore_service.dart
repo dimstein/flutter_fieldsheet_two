@@ -67,11 +67,11 @@ class FirestoreService {
     if (queryBuilder != null) {
       query = queryBuilder(query);
     }
-    var tempUID = ['1001', '1005', 'looop', 'what'];
+    //var tempUID = ['1001', '1005', 'looop', 'what'];
 
     final Stream<QuerySnapshot> snapshots =
         // query.where('uid', whereIn: tempUID).snapshots();
-        query.where('zearch', arrayContainsAny: tempUID).snapshots();
+        query.where('zearch', arrayContainsAny: searchedUIDs).snapshots();
 
     //query.where('uid', isEqualTo: docUID).snapshots();
 
