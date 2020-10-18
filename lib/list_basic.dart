@@ -6,16 +6,16 @@ import 'package:provider/provider.dart';
 
 class ListBasic extends StatelessWidget {
   final Destination destination;
-  final String searchUID;
+  final List<String> searchUID;
 
-  const ListBasic({Key key, this.destination, this.searchUID = 'null'})
+  const ListBasic({Key key, this.destination, this.searchUID})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String activeLBUID;
-    activeLBUID = searchUID;
-    print('this is ListBasic $activeLBUID');
+    // String activeLBUID;
+    //activeLBUID = searchUID;
+    //print('this is ListBasic $activeLBUID');
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 25.0),
@@ -26,7 +26,7 @@ class ListBasic extends StatelessWidget {
             children: <Widget>[
               SearchTextForm(),
               OdourListWidget(
-                searchUID: activeLBUID,
+                searched: ['null'],
               ),
             ],
           ),
@@ -38,9 +38,12 @@ class ListBasic extends StatelessWidget {
 }
 
 class OdourListWidget extends StatefulWidget {
-  final String searchUID;
+  final List<String> searched;
 
-  const OdourListWidget({Key key, this.searchUID}) : super(key: key);
+  final String searchText;
+
+  const OdourListWidget({Key key, this.searched, this.searchText})
+      : super(key: key);
 
   @override
   _OdourListWidgetState createState() => _OdourListWidgetState();
@@ -48,20 +51,32 @@ class OdourListWidget extends StatefulWidget {
 
 class _OdourListWidgetState extends State<OdourListWidget> {
   String activeUID;
+  List<String> activeSearched;
+
+  @override
+  void initState() {
+    activeSearched = widget.searched;
+    super.initState();
+  }
+
+  void filterList(String searchText) {
+    activeSearched.clear();
+    setState(() {
+      activeSearched.add(searchText);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     var db = Provider.of<Database>(context);
-//activeUID=widget.searchUID;
-    print('OdourListWidget searchUID value = $activeUID');
-    List<String> quickUID = ['1000', '1005', '1010'];
+
+    // List<String> quickUID = ['1000', '1005', '1010'];
 
     return Material(
       child: StreamBuilder<List<Odour>>(
-          stream: activeUID == 'null'
+          stream: activeSearched[0] == 'null'
               ? db.odoursStream()
-              : db.filterOdourStream(searchUID: quickUID),
-          // : db.odourStream(odourUID: activeUID),
+              : db.filterOdourStream(searchUID: activeSearched),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var odour = snapshot.data;
@@ -140,6 +155,7 @@ class _OdourListWidgetState extends State<OdourListWidget> {
 }
 
 class SearchTextForm extends StatefulWidget {
+
   @override
   _SearchTextFormState createState() => _SearchTextFormState();
 }
@@ -153,6 +169,7 @@ class _SearchTextFormState extends State<SearchTextForm> {
     searchUIDTEC.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -171,11 +188,8 @@ class _SearchTextFormState extends State<SearchTextForm> {
           ),
           Expanded(flex: 1,
               child: RaisedButton(
-                onPressed: () {
-                  // Navigator.push(context, MaterialPageRoute(
-                  //    builder: (context) => OdourListWidget(searchUID: '1006'))
-                  // );
-                }
+                onPressed: () => OdourListWidget(searchText: searchUIDTEC.text)
+
                 ,
                 child: Icon(Icons.search),))
         ],
